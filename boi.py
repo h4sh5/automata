@@ -6,14 +6,11 @@ import time
 # graph / output array
 OUT = []
 
-# TYPES = ["_", '*', ' ', '#']
-TYPES = [' ', '*' ]#\\', '/' ,"."]
-# generate something like this:
-#{'_': 0, '*': 1, ' ': 2}
+TYPES = [' ', '*']
 
 TYPEDICT = dict(zip(list(range(len(TYPES))), TYPES))
 TYPEDICT_R = dict([(TYPEDICT.get(k),k) for k in TYPEDICT])
-
+# ^ type mapped to index
 
 def rule1(arr):
 	'''
@@ -146,8 +143,7 @@ def ca_rule30(arr):
 		# print(p,q,r)
 		# p XOR (q OR r)
 		# set next middle piece
-		# print('current:', current_pattern, 'next',p ^ (q | r))
-		next_center = out[(i + 1)%len(arr)] = TYPES[p ^ (q | r)]
+		next_center = out[(i + 1)%len(arr)] = TYPES[(p + q + r + q*r) % len(TYPES)]
 	return out
 
 def ca_rule110(arr):
@@ -163,7 +159,7 @@ def ca_rule110(arr):
 		current_pattern = char_to_ints([arr[i], arr[(i + 1)%len(arr)] , arr[(i + 2)%len(arr)]])
 		
 		p,q,r = current_pattern
-		next_center = out[(i + 1)%len(arr)] = TYPES[(q + r + q*r + p*q*r) % 2] 
+		next_center = out[(i + 1)%len(arr)] = TYPES[(q + r + q*r + p*q*r) % len(TYPES)] 
 	return out
 
 def prettyprint(arr, i=None):
@@ -184,7 +180,7 @@ def run(rulefunc, count):
 def runrand(rulefunc, count):
 	# run, but with random initial state
 	init = []
-	for i in range(0,50):
+	for i in range(0,80):
 		init.append(random.choice(TYPES))
 	prettyprint(init)
 	for i in range(count):
@@ -194,10 +190,10 @@ def runrand(rulefunc, count):
 
 
 def metarun(rulefunc, metafunc, count, isrand=False):
-	init = list(TYPES[0] * 100)
+	init = list(TYPES[0] * 80)
 	if random:
 		init = []
-		for i in range(0,100):
+		for i in range(0,80):
 			init.append(random.choice(TYPES))
 
 	varinit = [2,2,1]
