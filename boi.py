@@ -7,7 +7,7 @@ import time
 OUT = []
 
 # TYPES = ["_", '*', ' ', '#']
-TYPES = [' ', '\\', '/', '*', '#', '!']
+TYPES = [' ', '\\', '/' + "."]
 # generate something like this:
 #{'_': 0, '*': 1, ' ': 2}
 
@@ -91,19 +91,21 @@ def rule5(arr, A=2, B=2, C=1):
 	return arr
 
 def rule6(arr):
-	# swap first and last
-	# print('b4',arr)
-	L = arr[-1]
-	arr[-1] = arr[0]
-	arr[0] = L
-	# print('af',arr)
+	# tree?
+	i = random.randrange(0,len(arr))  
+	arr[i] = ' '
+	arr[(i + 1) % len(TYPES)] = TYPES[(i + 1) % len(TYPES)]
+	arr[(i - 1) % len(TYPES)] =  TYPES[(i + 2) % len(TYPES)]
+	arr[(i + 2) % len(TYPES)] =  TYPES[0]
+	arr[(i // 2) % len(TYPES)] =  TYPES[0]
 
-
-	# # swap middles
-	L = arr[-2]
-	arr[-2] = arr[1]
-	arr[1] = L
-
+	# i = random.randrange(0,len(arr))   - 2
+	# arr[i] = ' '
+	# arr[(i + 1) % len(TYPES)] = '\\'
+	# arr[(i - 1) % len(TYPES)] = '/'
+	# arr[(i + 2) % len(TYPES)] = ' '
+	# arr[(i // 2) % len(TYPES)] = ' '
+	
 	return arr
 
 
@@ -137,7 +139,7 @@ def run(rulefunc, count):
 	for i in range(count):
 		
 		init = rulefunc(init)
-		prettyprint(init,i)
+		prettyprint(init)
 
 
 def runrand(rulefunc, count):
@@ -149,7 +151,7 @@ def runrand(rulefunc, count):
 	for i in range(count):
 		
 		init = rulefunc(init)
-		prettyprint(init,i)
+		prettyprint(init)
 
 
 def metarun(rulefunc, metafunc, count, isrand=False):
@@ -182,18 +184,18 @@ if len(sys.argv) > 1:
 # run(rule3, count)
 
 
-print("----------- rule5 metarule1 ----------------")
-metarun(rule5, metarule1, count, isrand=True)
+# print("----------- rule5 metarule1 ----------------")
+# metarun(rule5, metarule1, count, isrand=True)
 
-print("----------- rule5 metarule2 ----------------")
-metarun(rule5, metarule2, count, isrand=True)
+# print("----------- rule5 metarule2 ----------------")
+# metarun(rule5, metarule2, count, isrand=True)
 
-print("----------- rule5 metarule3 ----------------")
-metarun(rule5, metarule3, count, isrand=True)
+# print("----------- rule5 metarule3 ----------------")
+# metarun(rule5, metarule3, count, isrand=True)
 
 
-print("----------- rule4 ----------------")
-runrand(rule4, count)
+# print("----------- rule4 ----------------")
+# runrand(rule4, count)
 
 print("----------- rule6 ----------------")
 runrand(rule6, count)
