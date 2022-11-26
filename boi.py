@@ -7,7 +7,7 @@ import time
 OUT = []
 
 # TYPES = ["_", '*', ' ', '#']
-TYPES = [' ', '\\', '/' + "."]
+TYPES = [' ', '*' ]#\\', '/' ,"."]
 # generate something like this:
 #{'_': 0, '*': 1, ' ': 2}
 
@@ -126,6 +126,45 @@ def metarule3(vararr):
 	vararr[0] = B
 	return vararr
 
+def char_to_ints(arr):
+	return [TYPEDICT_R[x] for x in arr]
+
+def ca_rule30(arr):
+	'''
+	use a rolling window approach 
+	https://en.wikipedia.org/wiki/Cellular_automaton#Elementary_cellular_automata
+	'''
+	# start out with fresh array
+	out = []
+	for i in range(len(arr)):
+		out.append(0)
+	for i in range(0, len(arr)): # one step at a time
+		# wrap around
+		current_pattern = char_to_ints([arr[i], arr[(i + 1)%len(arr)] , arr[(i + 2)%len(arr)]])
+		
+		p,q,r = current_pattern
+		# print(p,q,r)
+		# p XOR (q OR r)
+		# set next middle piece
+		# print('current:', current_pattern, 'next',p ^ (q | r))
+		next_center = out[(i + 1)%len(arr)] = TYPES[p ^ (q | r)]
+	return out
+
+def ca_rule110(arr):
+	'''
+	https://www.wolframalpha.com/input?key=&i2d=true&i=rule+110
+	'''
+	# start out with fresh array
+	out = []
+	for i in range(len(arr)):
+		out.append(0)
+	for i in range(0, len(arr)): # one step at a time
+		# wrap around
+		current_pattern = char_to_ints([arr[i], arr[(i + 1)%len(arr)] , arr[(i + 2)%len(arr)]])
+		
+		p,q,r = current_pattern
+		next_center = out[(i + 1)%len(arr)] = TYPES[(q + r + q*r + p*q*r) % 2] 
+	return out
 
 def prettyprint(arr, i=None):
 	if i:
@@ -166,7 +205,7 @@ def metarun(rulefunc, metafunc, count, isrand=False):
 	for i in range(count):
 		init = rulefunc(init, varinit[0] , varinit[1], varinit[2])
 		varinit = metafunc(varinit)
-		prettyprint(init, i)
+		prettyprint(init)
 
 count = 10
 
@@ -174,14 +213,14 @@ if len(sys.argv) > 1:
 	count = int(sys.argv[1])
 
 
-# print("----------- rule1 ----------------")
-# run(rule1, count)
+print("----------- rule1 ----------------")
+run(rule1, count)
 
-# print("----------- rule2 ----------------")
-# run(rule2, count)
+print("----------- rule2 ----------------")
+run(rule2, count)
 
-# print("----------- rule3 ----------------")
-# run(rule3, count)
+print("----------- rule3 ----------------")
+run(rule3, count)
 
 
 # print("----------- rule5 metarule1 ----------------")
@@ -194,8 +233,19 @@ if len(sys.argv) > 1:
 # metarun(rule5, metarule3, count, isrand=True)
 
 
-# print("----------- rule4 ----------------")
-# runrand(rule4, count)
+print("----------- rule4 ----------------")
+runrand(rule4, count)
 
 print("----------- rule6 ----------------")
 runrand(rule6, count)
+
+# print('----------- rule30 ---------------')
+# run(ca_rule30, count)
+
+
+print('----------- rule30 ---------------')
+runrand(ca_rule30, count)
+
+
+print('----------- rule110 ---------------')
+runrand(ca_rule110, count)
