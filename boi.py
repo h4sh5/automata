@@ -7,7 +7,7 @@ import time
 OUT = []
 
 # TYPES = ["_", '*', ' ', '#']
-TYPES = [' ', '\\', '/', '*', '#']
+TYPES = [' ', '\\', '/', '*', '#', '!']
 # generate something like this:
 #{'_': 0, '*': 1, ' ': 2}
 
@@ -90,6 +90,23 @@ def rule5(arr, A=2, B=2, C=1):
 			arr[i] = TYPES[(typeindex - C) % len(TYPES)]
 	return arr
 
+def rule6(arr):
+	# swap first and last
+	# print('b4',arr)
+	L = arr[-1]
+	arr[-1] = arr[0]
+	arr[0] = L
+	# print('af',arr)
+
+
+	# # swap middles
+	L = arr[-2]
+	arr[-2] = arr[1]
+	arr[1] = L
+
+	return arr
+
+
 def metarule1(vararr):
 	return [x + 2 for x in vararr]
 
@@ -120,10 +137,28 @@ def run(rulefunc, count):
 	for i in range(count):
 		
 		init = rulefunc(init)
-		prettyprint(init)
+		prettyprint(init,i)
 
-def metarun(rulefunc, metafunc, count):
+
+def runrand(rulefunc, count):
+	# run, but with random initial state
+	init = []
+	for i in range(0,50):
+		init.append(random.choice(TYPES))
+	prettyprint(init)
+	for i in range(count):
+		
+		init = rulefunc(init)
+		prettyprint(init,i)
+
+
+def metarun(rulefunc, metafunc, count, isrand=False):
 	init = list(TYPES[0] * 100)
+	if random:
+		init = []
+		for i in range(0,100):
+			init.append(random.choice(TYPES))
+
 	varinit = [2,2,1]
 	prettyprint(init)
 	for i in range(count):
@@ -146,14 +181,19 @@ if len(sys.argv) > 1:
 # print("----------- rule3 ----------------")
 # run(rule3, count)
 
-# print("----------- rule4 ----------------")
-# run(rule4, count)
 
 print("----------- rule5 metarule1 ----------------")
-metarun(rule5, metarule1, count)
+metarun(rule5, metarule1, count, isrand=True)
 
 print("----------- rule5 metarule2 ----------------")
-metarun(rule5, metarule2, count)
+metarun(rule5, metarule2, count, isrand=True)
 
 print("----------- rule5 metarule3 ----------------")
-metarun(rule5, metarule3, count)
+metarun(rule5, metarule3, count, isrand=True)
+
+
+print("----------- rule4 ----------------")
+runrand(rule4, count)
+
+print("----------- rule6 ----------------")
+runrand(rule6, count)
